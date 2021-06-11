@@ -1,0 +1,12 @@
+*__pycache__/
+.idea
+/static
+/media
+**/migrations
+*.log
+*.zip
+db.sqlite3
+.secret.env
+*.json
+/logs/
+/venv/

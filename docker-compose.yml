@@ -1,0 +1,33 @@
+version: "3.5"
+services:
+  postgres:
+    image: postgres
+    ports:
+    - "5437:5432"
+    networks:
+      liblesson:
+        ipv4_address: "172.49.0.2"
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+
+  web:
+    container_name: liblesson_web
+    build: .
+    ports:
+    - "8889:8889"
+    networks:
+      liblesson:
+        ipv4_address: "172.49.0.3"
+    depends_on:
+      - postgres
+    tty: true
+    command: bash -c "python manage.py makemigrations & python manage.py makemigrations core  & python manage.py migrate & python manage.py runserver 0.0.0.0:8889"
+    volumes:
+      - .:/code
+
+networks:
+  liblesson:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.49.0.0/16"

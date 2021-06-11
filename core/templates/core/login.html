@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block content %}
+    <form action="{% if request.GET.next %}{% url 'login' %}?next={{ request.GET.next }}{% else %}{% url 'login' %}{% endif %}" method="post">
+        {{ form.as_p }}
+        <input type="submit" value="Войти">
+    {% csrf_token %}
+    <p>Вы можете зарегистрироваться, если вас нет в системе. <a href="{% url "register" %}">Регистрация</a>.</p>
+    </form>
+{% endblock %}
+{% block title %}
+Вход
+{% endblock %}

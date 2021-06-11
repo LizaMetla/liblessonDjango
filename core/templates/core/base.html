@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Библиотека{% endblock %}</title>
+</head>
+<body>
+<p>Количество переходов: {{ request.session.current_swap }}</p>
+<p>Версия приложения: {{ request.version }}</p>
+{% block content %}
+
+{% endblock %}
+
+</body>
+</html>

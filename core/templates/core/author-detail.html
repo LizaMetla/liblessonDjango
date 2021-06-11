@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% block content %}
+    <h1>Подробнее об авторе</h1>
+    <p>Имя: <strong>{{ author.first_name }}</strong></p>
+    <p>Фамилия: <strong>{{ author.last_name }}</strong></p>
+    <figure>
+    {% if author.author_image %}
+        <img src="{{ author.author_image.url }}" alt="Изображение {{ author.first_name }}" height="150" width="100">
+    {% endif %}
+    </figure>
+
+    <p>Дата рождения: {{ author.date_of_birth|date:"Y-m-d" }}</p>
+    <p>Пол: {{ author.get_sex_display }}</p>
+    <a href="{% url 'author_delete' author.pk %}">Удалить...</a>
+    <hr>
+    <p>Все книги автора:</p>
+    {% for book_ in author.books.all %}
+        {% include 'core/blocks/book-card.html' with book=book_ %}
+        <hr>
+    {% endfor %}
+
+
+    <a href="{% url 'authors' %}">Назад...</a>
+    <br>
+
+{% endblock %}

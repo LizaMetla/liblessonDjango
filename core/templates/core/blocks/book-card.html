@@ -1,0 +1,21 @@
+<article>
+    <p>Название: <strong>{{ book.name }}</strong></p>
+    <p>Автор: <strong>{{ book.author }}</strong></p>
+</article>
+<article>
+    <figure>
+        <figcaption>Фотография книги</figcaption>
+        {% if book.image %}
+            <img src="{{ book.image.url }}" alt="Изображение для {{ book.name }}" height="200" width="250">
+        {% endif %}
+    </figure>
+
+    <p>Описание: {{ book.description }}</p>
+</article>
+<ul>
+    {% for genre in object.genres.all %}
+        <li>{{ genre.name }}</li>
+    {% endfor %}
+</ul>
+<p>Цена: <strong>{{ book.price }}</strong> $ </p>
+<a href="{% url 'book_delete' book.pk %}">Удалить...</a>

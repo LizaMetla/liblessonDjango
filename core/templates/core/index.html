@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% block title %}
+    Добро пожаловать в лучшее приложение
+{% endblock %}
+{% block content %}
+    <h1>Список доступных книг</h1>
+    <form action="." method="post">
+
+
+    </form>
+    <form action="." method="post">
+
+        {{ form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Поиск"></p>
+    </form>
+
+
+    {% for book in books %}
+        <p>{{ book.name }} [{{ book.author }}] <a href="{% url 'detail_book' book.id %}">Подробнее...</a></p>
+
+
+
+        <hr>
+    {% endfor %}
+    <h3><a href="{% url 'authors' %}">Подробнее обо всех авторах в этой библиотеке...</a></h3>
+    <hr>
+    {% if request.user.is_authenticated  %}
+        <h3><a href="{% url 'book_create' %}">Создать книгу</a></h3>
+        <h3><a href="{% url 'author_create' %}">Создать автора</a></h3>
+        <h3><a href="{% url 'genre_create' %}">Создать жанр</a></h3>
+        <a href="{% url 'logout' %}">Выйти</a>
+    {% else %}
+        <a href="{% url 'login' %}">Войти</a>
+    {% endif %}
+
+{% endblock %}
+
+
