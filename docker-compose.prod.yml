@@ -3,8 +3,6 @@ services:
   postgres:
     container_name: liblesson_postgres
     image: postgres
-    ports:
-    - "5437:5432"
     networks:
       liblesson:
         ipv4_address: "172.49.0.2"
@@ -19,15 +17,16 @@ services:
   web:
     container_name: liblesson_web
     build: .
-    ports:
-    - "8889:8889"
     networks:
       liblesson:
         ipv4_address: "172.49.0.3"
     depends_on:
       - postgres
     tty: true
-    command: bash -c "python manage.py makemigrations & python manage.py makemigrations core  & python manage.py migrate & python manage.py runserver 0.0.0.0:8889"
+    command: bash -c "python manage.py makemigrations & python manage.py makemigrations core
+      & python manage.py migrate
+      & python manage.py collectstatic --noinput
+      & gunicorn --workers=8 -c gunicorn.py liblesson.wsgi --timeout 600"
     volumes:
       - .:/code
     logging:
@@ -35,6 +34,22 @@ services:
       options:
         max-size: 10m
         max-file: "3"
+
+  nginx:
+    image: nginx:latest
+    container_name: liblesson_nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./media/:/code/media
+      - ./static/:/code/static
+      - ./nginx/:/etc/nginx/conf.d
+    depends_on:
+      - web
+    networks:
+      liblesson:
+        ipv4_address: "172.49.0.4"
 
 networks:
   liblesson:
