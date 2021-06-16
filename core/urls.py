@@ -4,6 +4,7 @@ from django.urls import path
 from core.views.auth import LoginView, RegisterView
 from core.views.author import AuthorsView, AuthorDetailView, AuthorCreateView, AuthorDeleteView
 from core.views.books import DetailBookView, BookCreateView, BookDeleteView
+from core.views.favorites import FavoritesView, AddToFavoriteView, RemoveFromFavoriteView
 from core.views.genres import GenreCreateView
 from core.views.base import *
 
@@ -19,5 +20,9 @@ urlpatterns = [
     path('book/delete/<int:pk>', BookDeleteView.as_view(), name='book_delete'),
     path('author/create/', AuthorCreateView.as_view(), name='author_create'),
     path('author/delete/<int:pk>', AuthorDeleteView.as_view(), name='author_delete'),
-    path('genre/create/', GenreCreateView.as_view(), name='genre_create')
+    path('genre/create/', GenreCreateView.as_view(), name='genre_create'),
+    path('favorites/', FavoritesView.as_view(), name='favorites'),
+    path('add-to-favorite/<int:pk>/', AddToFavoriteView.as_view(), name='add-to-favorite'),
+    path('remove-from-favorite/<int:pk>/', RemoveFromFavoriteView.as_view(), name='remove-to-favorite')
+
 ]

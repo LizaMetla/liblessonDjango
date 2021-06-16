@@ -27,7 +27,7 @@ services:
     depends_on:
       - postgres
     tty: true
-    command: bash -c "python manage.py makemigrations & python manage.py makemigrations core  & python manage.py migrate & python manage.py runserver 0.0.0.0:8889"
+    command: bash -c "python manage.py makemigrations & python manage.py makemigrations core  & python manage.py migrate & python manage.py migrate core & python manage.py runserver 0.0.0.0:8889"
     volumes:
       - .:/code
     logging:

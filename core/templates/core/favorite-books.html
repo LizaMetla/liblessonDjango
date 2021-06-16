@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    Избранные
+{% endblock %}
+{% block content %}
+    <h1>Список избранных книг</h1>
+    {% for book in request.user.favorites.all %}
+         <p>{{ book.name }} [{{ book.author }}] <a href="{% url 'detail_book' book.id %}">Подробнее...</a></p>
+
+        <hr>
+    {% endfor %}
+    <a href="{% url 'index' %}">Назад...</a>
+{% endblock %}
