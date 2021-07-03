@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import logging
 import os
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,7 +22,7 @@ VERSION = '0.1.2.0'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
+AUTH_USER_MODEL = 'core.User'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-eo1em6ap5#-u5r*aibi(5ruzr-xz@=mhsb8##l1srd4^6-rza_'
 
@@ -39,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core.apps.CoreConfig'
+    'liblesson',
+    'core.apps.CoreConfig',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -132,6 +135,25 @@ MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
+}
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': timedelta(days=14),
+}
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOG_FOLDER = os.path.join(BASE_DIR, 'logs')
 
@@ -179,11 +201,11 @@ LOGGING = {
             }
     },
     'loggers': {
-        'django': {
-            'handlers': ['file-handler', 'file-errors-handler'],
-            'level': 'INFO',
-            'propagate': False,
-        },
+        # 'django': {
+        #     'handlers': ['file-handler', 'file-errors-handler'],
+        #     'level': 'INFO',
+        #     'propagate': False,
+        # },
         'auth': {
             'handlers': ['auth-file-handler'],
             'propagate': False,

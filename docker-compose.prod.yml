@@ -23,8 +23,7 @@ services:
     depends_on:
       - postgres
     tty: true
-    command: bash -c "python manage.py makemigrations & python manage.py makemigrations core
-      & python manage.py migrate
+    command: bash -c "python manage.py makemigrations core & python manage.py migrate core & python manage.py makemigrations & python manage.py migrate
       & python manage.py collectstatic --noinput
       & gunicorn --workers=8 -c gunicorn.py liblesson.wsgi --timeout 600"
     volumes:

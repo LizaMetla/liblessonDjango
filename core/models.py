@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
@@ -8,6 +8,10 @@ class AbstractModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class User(AbstractUser, AbstractModel):
+    pass
 
 
 class Genre(AbstractModel):
@@ -25,8 +29,6 @@ class Book(AbstractModel):
     image = models.ImageField(null=True, blank=True, verbose_name='Изображение')
     price = models.FloatField(verbose_name='Цена', default=0.0)
     users = models.ManyToManyField(User, related_name='favorites')
-
-
 
     def __str__(self):
         return f'{self.name} [{self.author if self.author else "Не выбран"}]'

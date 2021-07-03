@@ -1,10 +1,24 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 
-from core.models import Book, Author, Genre
+from core.models import Book, Author, Genre, User
 
+class CustomUserCreationForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = '__all__'
+        field_classes = {'email': forms.EmailField}
+
+
+class CustomUserChangeForm(UserChangeForm):
+
+    class Meta:
+        model = User
+        fields = '__all__'
+        field_classes = {'email': forms.EmailField}
 
 class BookForm(forms.ModelForm):
     class Meta:

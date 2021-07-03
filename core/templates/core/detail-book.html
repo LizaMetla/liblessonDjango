@@ -3,7 +3,7 @@
     <h1>Подробнее о книге</h1>
     {% include 'core/blocks/book-card.html' with book=book %}
     <hr>
-    {% if book in request.user.fovorites %}
+    {% if book in request.user.favorites.all %}
         <a href="{% url 'remove-to-favorite' book.pk %}">Убрать из избранных</a>
         {% else %}
         <a href="{% url 'add-to-favorite' book.pk %}">Добавить в избранные</a>

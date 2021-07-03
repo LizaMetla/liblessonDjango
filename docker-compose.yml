@@ -1,35 +1,40 @@
-version: "3.5"
-services:
-  postgres:
-    container_name: liblesson_postgres
-    image: postgres
+version: "3.5" # версия синтаксиса docker-compose
+
+services: # начало описания сервисов
+  postgres: # сервис базы данных
+    container_name: liblesson_postgres # имя контейнера
+    image: postgres # название образа в docker hub
     ports:
-    - "5437:5432"
-    networks:
-      liblesson:
-        ipv4_address: "172.49.0.2"
-    environment:
+    - "5437:5432" # порт на хосте : порт в докере, в контейнере liblesson_postgres
+    networks: # список сетей, в которых находится контейнер liblesson_postgres
+      liblesson: # указываем сеть
+        ipv4_address: "172.49.0.2" # прописываем ip адрес внутри сети liblesson.
+    environment: # переменные окружения
       POSTGRES_HOST_AUTH_METHOD: "trust"
-    logging:
+    logging: # говорим докеру хранить логов не больше 10 мб.
       driver: "json-file"
       options:
         max-size: 10m
         max-file: "3"
 
-  web:
-    container_name: liblesson_web
-    build: .
+  web: # имя сервиса
+    container_name: liblesson_web # имя контейнера
+    build: . # на основе какого файла строить образ
     ports:
     - "8889:8889"
     networks:
       liblesson:
         ipv4_address: "172.49.0.3"
-    depends_on:
+    depends_on: # не запускать этот сервис, пока не запустится postgres
       - postgres
-    tty: true
-    command: bash -c "python manage.py makemigrations & python manage.py makemigrations core  & python manage.py migrate & python manage.py migrate core & python manage.py runserver 0.0.0.0:8889"
+    tty: true # видеть логи в терминале
+    command: bash -c "python manage.py makemigrations core --noinput &&
+              python manage.py makemigrations --noinput &&
+              python manage.py migrate --noinput &&
+              python manage.py collectstatic --noinput &&
+              python manage.py runserver 0.0.0.0:8889" # команда, воторая выполняется при каждом запуске контейнера, т.е docker-compose up
     volumes:
-      - .:/code
+      - .:/code # смонтируй текущую директорию на хосте (.) в папку code в сервис web докера (/code)
     logging:
       driver: "json-file"
       options:
@@ -37,8 +42,8 @@ services:
         max-file: "3"
 
 networks:
-  liblesson:
-    driver: bridge
+  liblesson: # описание сети
+    driver: bridge # драйвер (про них можно почитать, я знаю только bridge и host)
     ipam:
       config:
-        - subnet: "172.49.0.0/16"
+        - subnet: "172.49.0.0/16" # задаём маску сети (что-то из теории сетей)

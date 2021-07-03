@@ -17,10 +17,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_jwt.views import refresh_jwt_token, obtain_jwt_token
+
+from liblesson.endpoints import ChangePasswordEndpoint
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls'))
+    path('api/change-email/', ChangePasswordEndpoint.as_view()),
+    path('api/api-token-auth/', obtain_jwt_token),
+    path('api/api-token-refresh/', refresh_jwt_token),
+    path('', include('core.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
